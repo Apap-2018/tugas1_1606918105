@@ -1,4 +1,5 @@
 package com.apap.tugas1.controller;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -18,10 +19,15 @@ public class PegawaiController {
 	private PegawaiService pegawaiService;
 	@Autowired
 	private JabatanService jabatanService;
+	@Autowired
+	private InstansiService instansiService;
+	@Autowired
+	private ProvinsiService provinsiService;
 	
 	@RequestMapping("/")
 	private String home(Model model) {
-		List<JabatanModel> get_allJabatan = jabatanService.find_allJabatan();	
+		List<JabatanModel> get_allJabatan = jabatanService.find_allJabatan();
+		model.addAttribute("listAllInstansi",instansiService.findAllInstansi());
 		model.addAttribute("listJabatan",get_allJabatan);
 		return"home";
 	}
@@ -52,7 +58,93 @@ public class PegawaiController {
 		return "view-pegawai";
 	}
 	
-
+	/*
+	 * Untuk menampilkan halaman berupa pegawai tertua dan termuda
+	 */
+	@RequestMapping(value = "/pegawai/termuda-tertua", method=RequestMethod.GET)
+	private String pegawaiInstansi(@RequestParam("idInstansi") long idInstansi, Model model) {
+		PegawaiModel tertua = pegawaiService.findPegawaiTertua(idInstansi);
+		PegawaiModel termuda= pegawaiService.findPegawaiTermuda(idInstansi);
+		
+		List<JabatanModel> jabatanPegawaiTertua = tertua.getJabatanList();
+		Collections.sort(jabatanPegawaiTertua);
+		Integer gajiTertua = (int) (jabatanPegawaiTertua.get(0).getGajiPokok() + 
+				(jabatanPegawaiTertua.get(0).getGajiPokok()*
+				(tertua.getInstansi().getProvinsi().getPresentaseTunjangan()/100)));
+				
+		List<JabatanModel> jabatanPegawaiTermuda = termuda.getJabatanList();
+		Collections.sort(jabatanPegawaiTermuda);
+		Integer gajiTermuda = (int)(jabatanPegawaiTermuda.get(0).getGajiPokok() 
+		+ (jabatanPegawaiTermuda.get(0).getGajiPokok() *
+		(termuda.getInstansi().getProvinsi().getPresentaseTunjangan()/100)));
+		
+		model.addAttribute("tertua", tertua);
+		model.addAttribute("gajiTertua",gajiTertua);
+		model.addAttribute("termuda", termuda);
+		model.addAttribute("gajiTermuda",gajiTermuda);
+		
+		return "tabelTertuaTermuda";
+	}
+	
+	//Fitur4 - Menampilkan Data Pegawai (Berdasarkan Instansi, Provinsi, Jabatan)
+	@RequestMapping(value = "/pegawai/cari", method=RequestMethod.GET)
+	private String cariPegawai(@RequestParam(value="idProvinsi",required=false) String idProvinsi,@RequestParam(value="idInstansi",required=false) String idInstansi,@RequestParam(value="idJabatan",required=false) String idJabatan,Model model) {
+		model.addAttribute("listProvinsi", provinsiService.find_allProvinsi());
+		model.addAttribute("listInstansi", instansiService.findAllInstansi());
+		model.addAttribute("listJabatan", jabatanService.find_allJabatan());
+		List<PegawaiModel> pegawai = pegawaiService.getAllPegawai();
+		
+		if ((idProvinsi==null || idProvinsi.equals("")) && (idInstansi==null||idInstansi.equals("")) && (idJabatan==null||idJabatan.equals(""))) {
+		}
+		else {
+			if (idProvinsi!=null && !idProvinsi.equals("")) {
+				List<PegawaiModel> temp = new ArrayList<PegawaiModel>();
+				for (PegawaiModel peg: pegawai) {
+					if (((Long)peg.getInstansi().getProvinsi().getId()).toString().equals(idProvinsi)) {
+						temp.add(peg);
+					}
+				}
+				pegawai = temp;
+				model.addAttribute("idProvinsi", Long.parseLong(idProvinsi));
+			}
+			else {
+				model.addAttribute("idProvinsi", "");
+			}
+			if (idInstansi!=null&&!idInstansi.equals("")) {
+				List<PegawaiModel> temp = new ArrayList<PegawaiModel>();
+				for (PegawaiModel peg: pegawai) {
+					if (((Long)peg.getInstansi().getId()).toString().equals(idInstansi)) {
+						temp.add(peg);
+					}
+				}
+				pegawai = temp;
+				model.addAttribute("idInstansi", Long.parseLong(idInstansi));
+			}
+			else {
+				model.addAttribute("idInstansi", "");
+			}
+			if (idJabatan!=null&&!idJabatan.equals("")) {
+				List<PegawaiModel> temp = new ArrayList<PegawaiModel>();
+				for (PegawaiModel peg: pegawai) {
+					for (JabatanModel jabatan:peg.getJabatanList()) {
+						if (((Long)jabatan.getId()).toString().equals(idJabatan)) {
+							temp.add(peg);
+							break;
+						}
+					}
+					
+				}
+				pegawai = temp;
+				model.addAttribute("idJabatan", Long.parseLong(idJabatan));
+			}
+			else {
+				model.addAttribute("idJabatan", "");
+			}
+		}
+		model.addAttribute("listPegawai",pegawai);
+		return "cariPegawai";
+	}
+	
 	
 }
 

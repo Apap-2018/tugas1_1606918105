@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+	<html xmlns:th="htpp://www.thymeleaf.org">
+		<head>
+			<Object th:include="fragments/fragment :: head"></Object>
+		</head>
+
+		<body>
+	
+		<nav th:replace="fragments/fragment :: navbar"></nav>
+		<div class="container-fluid">
+				<h2>Cari Pegawai</h2>
+				<form th:action="@{/jabatan/cari}" method="GET">
+							<select name="idJabatan">
+			  					<option th:each="jabatanPegawai : ${listJabatan}" th:value="${jabatanPegawai.id}" th:text="${jabatanPegawai.nama}"></option>
+							</select>
+				</form>
+
+				
+						
+				
+		</div>
+	</body>
+</html>

@@ -9,4 +9,8 @@ public interface JabatanService {
 	void addJabatan (JabatanModel jabatan);
 	JabatanModel getJabatanById(Long idJabatan);
 	List<JabatanModel> find_allJabatan();
+	void updateJabatanForm(long id,String nama, String deskripsi, double gajiPokok);
+	void deleteJabatan(long id);
 }
+
+

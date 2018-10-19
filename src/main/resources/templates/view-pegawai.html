@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 	<html xmlns:th="htpp://www.thymeleaf.org">
 		<head>
-			<title>view-pegawai</title>
+			<Object th:include="fragments/fragment :: head"></Object>
 		</head>
 
 		<body>
+		<nav th:replace="fragments/fragment :: navbar"></nav>
 		<h2 th:text = "'Lihat Data Pegawai - ' + ${nipPegawai}"></h2>
 		
 		<table style = "width:70%" class="table table-striped table-bordered">

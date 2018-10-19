@@ -8,7 +8,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "jabatan")
-public class JabatanModel implements Serializable {
+public class JabatanModel implements Serializable, Comparable<JabatanModel>{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
@@ -26,6 +26,13 @@ public class JabatanModel implements Serializable {
     @NotNull
     @Column(name = "gaji_pokok", nullable = false)
     private double gajiPokok;
+    
+    @Override
+	public int compareTo(JabatanModel jabatan) {
+		int compare = Double.compare(jabatan.getGajiPokok(), gajiPokok);
+		return compare;
+	}
+    
 
     @ManyToMany(fetch = FetchType.LAZY,
             cascade = {

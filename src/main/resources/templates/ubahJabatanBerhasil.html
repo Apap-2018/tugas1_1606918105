@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+			<object th:include="fragments/fragment :: head" th:remove="tag"></object>
+	
+			
+</head>
+
+<body>
+	<nav th:replace="fragments/fragment :: navbar"></nav>
+	
+	<h2>Data Jabatan Pegawai Berhasil diubah</h2>
+	<td><a th:href="@{/}">home</a></td>
+</body>
+
+</html>
+

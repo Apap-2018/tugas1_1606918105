@@ -36,7 +36,19 @@ public class JabatanServiceImpl implements JabatanService {
 		return jabatanDb.findAll();
 	}
 
-	
+	@Override
+	public void updateJabatanForm(long id, String nama, String deskripsi, double gajiPokok) {
+		jabatanDb.findById(id).get().setNama(nama);
+		jabatanDb.findById(id).get().setDeskripsi(deskripsi);
+		jabatanDb.findById(id).get().setGajiPokok(gajiPokok);
+	}
+
+	@Override
+	public void deleteJabatan(long id) {
+		jabatanDb.deleteById(id);
+		
+	}
+
 
 	
 
