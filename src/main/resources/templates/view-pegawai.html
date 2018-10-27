@@ -48,6 +48,12 @@
         		<td th:text="'Rp. '+ ${gaji}"></td>
     		</tr>
 		</table>
+		<div class="card-body" style="display: flex; flex-direction:row;"> 
+             <form th:action="@{/pegawai/ubah}" method="GET">
+			    <input type=hidden name="idPegawai" th:value="${pegawai.id}" />
+			    <button value="submit" class="btn  btn-primary" style="margin-right:1rem;margin-top:0.5rem;">Ubah</button>
+			 </form>
+		</div>
 	</body>
 </html>
 	

@@ -64,6 +64,20 @@ public class PergawaiServiceImpl implements PegawaiService  {
 		return pegawaiDituju;
 
 	}
+
+	@Override
+	public PegawaiModel getPegawaiById(Long idPegawai) {
+		return pegawaiDb.findById(idPegawai).get();
+		
+	}
+
+	@Override
+	public void addPegawai(PegawaiModel pegawai) {
+		pegawaiDb.save(pegawai);
+		
+	}
+
+
 }
 	
 

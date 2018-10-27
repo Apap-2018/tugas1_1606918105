@@ -3,6 +3,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
@@ -11,6 +13,7 @@ import com.apap.tugas1.service.PegawaiService;
 import com.apap.tugas1.model.*;
 
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
@@ -56,6 +59,149 @@ public class PegawaiController {
 		model.addAttribute("gaji",gajiInt);
 		
 		return "view-pegawai";
+	}
+	/*Untuk Tambah Pegawai
+	 * 
+	 */
+	
+	@GetMapping("pegawai/add")
+	private String tambahPegawai(Model model) {
+		PegawaiModel newPegawai = new PegawaiModel();
+		JabatanModel newJabatan = new JabatanModel();
+		List<JabatanModel> jabatanPegawai = new ArrayList<JabatanModel>();
+		jabatanPegawai.add(newJabatan);
+		newPegawai.setJabatanList(jabatanPegawai);
+	
+	
+		model.addAttribute("pegawai", newPegawai);
+		model.addAttribute("allJabatan", jabatanService.find_allJabatan());
+		model.addAttribute("provinsi", provinsiService.find_allProvinsi());
+		model.addAttribute("instansi",instansiService.findAllInstansi());
+	
+	
+		return"formTambahPegawai";
+		
+	}
+	/*
+	 * Untuk tambah atau kurangi row pada Jabatan
+	 */
+	@PostMapping(value = "/pegawai/add", params= {"addRow"})
+	public String addRowJabatan(@ModelAttribute PegawaiModel pegawai, BindingResult bindingResult, Model model) {
+		if (pegawai.getJabatanList()== null) {
+			pegawai.setJabatanList(new ArrayList<JabatanModel>());
+		}
+		pegawai.getJabatanList().add(new JabatanModel());
+		
+		model.addAttribute("pegawai", pegawai);
+		model.addAttribute("allJabatan", jabatanService.find_allJabatan());
+		model.addAttribute("provinsi", provinsiService.find_allProvinsi());
+		model.addAttribute("instansi",instansiService.findAllInstansi());
+		
+		
+		
+		return "formTambahPegawai";
+	}
+	
+	@PostMapping(value="/pegawai/add" , params= {"deleteRow"})
+	public String deleteRowJabatan(@ModelAttribute PegawaiModel pegawai,BindingResult bindingResult, Model model, HttpServletRequest req) {
+		final Integer rowId = Integer.valueOf(req.getParameter("deleteRow"));
+	    pegawai.getJabatanList().remove(rowId.intValue());
+	   
+	    
+	    model.addAttribute("pegawai", pegawai);
+		model.addAttribute("allJabatan", jabatanService.find_allJabatan());
+		model.addAttribute("provinsi", provinsiService.find_allProvinsi());
+		model.addAttribute("instansi",instansiService.findAllInstansi());
+		
+		return "formTambahPegawai";
+		
+	}
+	
+	/*
+	 * Method ketika di submit
+	 */
+	
+	 @PostMapping(value = "/pegawai/add", params= {"Submit"})
+	 public String submitAddPegawai(@ModelAttribute PegawaiModel pegawai,Model model) {
+		 pegawaiService.addPegawai(pegawai);
+		 
+		 String message = "Pegawai bernama "+pegawai.getNama()+" dengan NIP: "+pegawai.getNip();
+	     model.addAttribute("message", message);
+	     return "addBerhasil";
+	 }
+	
+
+	
+	
+	
+	
+	/*
+	 * Untuk mengatur form ubah pegawai 
+	 */
+	 @RequestMapping(value= "/instansi/get", method = RequestMethod.GET)
+		public @ResponseBody List<InstansiModel> getInstansi(@RequestParam("provinsi") long id, Model model) {
+	    	List<InstansiModel> allInstansi = instansiService.findAllInstansi();
+	    	List<InstansiModel> instansiProvinsi = new ArrayList<InstansiModel>();
+	    	for (InstansiModel i: allInstansi) {
+	    		if (i.getProvinsi().getId()==id) {
+	    			instansiProvinsi.add(i);
+	    			System.out.println(i.getNama());
+	    		}
+	    	}
+	    	System.out.println("ada objek sejumlah: "+instansiProvinsi.size());
+	    	
+			return instansiProvinsi;
+		}
+	
+	@RequestMapping (value="/pegawai/ubah" , method=RequestMethod.GET)
+		private String updatePegawai(@RequestParam("idPegawai") Long id, Model model) {
+		PegawaiModel pegawai = pegawaiService.getPegawaiById(id);
+		List<JabatanModel> jabatanPegawai = pegawai.getJabatanList();
+		
+		model.addAttribute("pegawai", pegawai);
+		model.addAttribute("allJabatan", jabatanService.find_allJabatan());
+		model.addAttribute("provinsi", provinsiService.find_allProvinsi());
+		model.addAttribute("instansi",instansiService.findAllInstansi());
+		
+		model.addAttribute("dataupdatePegawai", new PegawaiModel());
+
+		
+		return "formUbahPegawai";
+		}
+	
+	/*
+	 * Untuk tambah atau kurangi row pada Jabatan
+	 */
+	@PostMapping(value = "/pegawai/ubah", params= {"addRow"})
+	public String tambahRowJabatan(@ModelAttribute PegawaiModel pegawai, BindingResult bindingResult, Model model) {
+		if (pegawai.getJabatanList()== null) {
+			pegawai.setJabatanList(new ArrayList<JabatanModel>());
+		}
+		pegawai.getJabatanList().add(new JabatanModel());
+		
+		model.addAttribute("pegawai", pegawai);
+		model.addAttribute("allJabatan", jabatanService.find_allJabatan());
+		model.addAttribute("provinsi", provinsiService.find_allProvinsi());
+		model.addAttribute("instansi",instansiService.findAllInstansi());
+		
+		
+		
+		return "formTambahPegawai";
+	}
+	
+	@PostMapping(value="/pegawai/ubah" , params= {"deleteRow"})
+	public String hapusRowJabatan(@ModelAttribute PegawaiModel pegawai,BindingResult bindingResult, Model model, HttpServletRequest req) {
+		final Integer rowId = Integer.valueOf(req.getParameter("deleteRow"));
+	    pegawai.getJabatanList().remove(rowId.intValue());
+	   
+	    
+	    model.addAttribute("pegawai", pegawai);
+		model.addAttribute("allJabatan", jabatanService.find_allJabatan());
+		model.addAttribute("provinsi", provinsiService.find_allProvinsi());
+		model.addAttribute("instansi",instansiService.findAllInstansi());
+		
+		return "formTambahPegawai";
+		
 	}
 	
 	/*
@@ -144,6 +290,8 @@ public class PegawaiController {
 		model.addAttribute("listPegawai",pegawai);
 		return "cariPegawai";
 	}
+	
+	
 	
 	
 }

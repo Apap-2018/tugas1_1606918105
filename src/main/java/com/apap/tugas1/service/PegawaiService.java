@@ -10,5 +10,7 @@ public interface PegawaiService {
 	List<PegawaiModel> getAllPegawai();
 	PegawaiModel findPegawaiTertua(long idInstansi);
 	PegawaiModel findPegawaiTermuda(long idInstansi);
+	PegawaiModel getPegawaiById(Long idPegawai);
+	void addPegawai(PegawaiModel pegawai);
 	
 }
