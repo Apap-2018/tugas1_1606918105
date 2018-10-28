@@ -4,7 +4,7 @@
 <meta charset="ISO-8859-1">
 <head>
 		<Object th:include="fragments/fragment :: head"></Object>
-		</head>
+</head>
 <body>
 	<nav th:replace="fragments/fragment :: navbar"></nav>
   		<h3 class="card-header">Ubah Data Pegawai</h3>
@@ -69,7 +69,7 @@
 							th:text="${jabatanItem.getNama()}" th:value="${jabatanItem.id}"></option>
 					</select>
 			<div class="input-group-addon">
-			<button class="btn btn-danger" th:value="${rowStat.index}" type="submit" name="deleteRow">X</button>
+			<button class="btn btn-danger" th:value="${rowStat.index}" type="submit" name="deleteRow">deleteRow</button>
 			</div>
 		</div>
 		</div>
@@ -78,7 +78,7 @@
 	    		<button class="btn btn-secondary"  type="submit" name="addRow">Add Jabatan</button>
 	 		 </div>
 
-		</div>
+		
 
 		  <button type="submit" name="pegawaiSubmit" class="btn btn-primary">Submit</button>
 

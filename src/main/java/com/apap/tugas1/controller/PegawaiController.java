@@ -122,18 +122,35 @@ public class PegawaiController {
 	 */
 	
 	 @PostMapping(value = "/pegawai/add", params= {"Submit"})
-	 public String submitAddPegawai(@ModelAttribute PegawaiModel pegawai,Model model) {
+	 public String submitPegawai(@ModelAttribute PegawaiModel pegawai,Model model) {
+		 String nip = "";
+		 nip += pegawai.getInstansi().getId();
+		 
+		 String[] tglLahir = pegawai.getTanggalLahir().toString().split("-");
+		 String tglLahirString = tglLahir[2] + tglLahir[1] + tglLahir[0].substring(2, 4);
+		 nip += tglLahirString;
+		 
+		 nip += pegawai.getTahunMasuk();
+		 
+		 int counterSama = 1;
+			for (PegawaiModel pegawaiInstansi:pegawai.getInstansi().getPegawaiInstansi()) {
+				if (pegawaiInstansi.getTahunMasuk().equals(pegawai.getTahunMasuk()) && pegawaiInstansi.getTanggalLahir().equals(pegawai.getTanggalLahir())) {
+					counterSama += 1;
+				}	
+			}
+			nip += "0" + counterSama;
+
+			for (JabatanModel jabatan:pegawai.getJabatanList()) {
+				System.out.println(jabatan.getNama());
+			}
+
+		pegawai.setNip(nip);
 		 pegawaiService.addPegawai(pegawai);
 		 
 		 String message = "Pegawai bernama "+pegawai.getNama()+" dengan NIP: "+pegawai.getNip();
 	     model.addAttribute("message", message);
-	     return "addBerhasil";
+	     return "addorupdate";
 	 }
-	
-
-	
-	
-	
 	
 	/*
 	 * Untuk mengatur form ubah pegawai 
@@ -168,6 +185,23 @@ public class PegawaiController {
 		
 		return "formUbahPegawai";
 		}
+	
+	@PostMapping(value="/pegawai/ubah",params= {"submitUpdate"})
+    public String submitUbahPegawai(@ModelAttribute PegawaiModel pegawai,Model model) {
+		pegawaiService.updatePegawai(pegawai);
+		pegawai=pegawaiService.getPegawaiById(pegawai.getId());
+		String message = "Pegawai bernama "+pegawai.getNama()+" dengan NIP: "+pegawai.getNip();
+        model.addAttribute("message", message);
+        return "addorupdate";
+    }
+    public boolean adaJabatan(String id,PegawaiModel singlePegawai) {
+    	for (JabatanModel jabatan: singlePegawai.getJabatanList()) {
+    		if (jabatan.getId()==Integer.parseInt(id)) {
+    			return true;
+    		}
+    	}
+    	return false;
+    }
 	
 	/*
 	 * Untuk tambah atau kurangi row pada Jabatan
@@ -290,7 +324,6 @@ public class PegawaiController {
 		model.addAttribute("listPegawai",pegawai);
 		return "cariPegawai";
 	}
-	
 	
 	
 	
