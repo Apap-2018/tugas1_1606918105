@@ -27,7 +27,7 @@
 					         </div>
 					         <div class="form-group">
 					          	<label for="gajiPokok">Gaji Pokok</label>
-					          	<input type="number" class="form-control" name="gajiPokok" th:value="*{gajiPokok}" aria-describedby="emailHelp" required="required" placeholder="Enter Gaji Pokok">
+					          	<input type="number" class="form-control" name="gajiPokok" th:value="*{#numbers.formatDecimal(gajiPokok,2,3)}" aria-describedby="emailHelp" required="required" placeholder="Enter Gaji Pokok">
 	        				 </div>
 	        
           </div>

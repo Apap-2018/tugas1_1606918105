@@ -28,7 +28,7 @@
 						<td th:text="${iterationStatus.count}"></td>
 						<td th:text="${jabatan.nama}"></td>
 						<td th:text="${jabatan.deskripsi}"></td>
-						<td th:text="'Rp'+${jabatan.gajiPokok}"></td>
+						<td th:text="'Rp'+${#numbers.formatDecimal(jabatan.gajiPokok,2,3)}"></td>
 					</tr>
 				</table>
 			</div>
