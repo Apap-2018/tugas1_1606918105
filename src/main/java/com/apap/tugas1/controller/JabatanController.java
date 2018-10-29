@@ -16,8 +16,6 @@ import com.apap.tugas1.model.PegawaiModel;
 import com.apap.tugas1.service.JabatanService;
 import com.apap.tugas1.service.PegawaiService;
 
-
-
 @Controller
 public class JabatanController {
 	
@@ -47,7 +45,8 @@ public class JabatanController {
 		JabatanModel jabatan = jabatanService.getJabatanById(idJabatan);
 		String nama= jabatanService.getJabatanById(idJabatan).getNama();
 		String deskripsi = jabatanService.getJabatanById(idJabatan).getDeskripsi();
-		Integer gaji = (int)jabatanService.getJabatanById(idJabatan).getGajiPokok();
+		double gajidouble =jabatanService.getJabatanById(idJabatan).getGajiPokok();
+		String gaji = String.format("%.0f", gajidouble); 
 		
 		model.addAttribute("jabatan", jabatan);
 		model.addAttribute("namajabatan", nama);
@@ -62,6 +61,7 @@ public class JabatanController {
 	private String viewAllJabaran(Model model) {
 		List<JabatanModel> listofAllJabatan = jabatanService.find_allJabatan();
 		model.addAttribute("listofAllJabatan", listofAllJabatan);
+		//String gaji = String.format("%.0f", gajidouble); 
 		return "viewAllJabatan";
 	}
 	

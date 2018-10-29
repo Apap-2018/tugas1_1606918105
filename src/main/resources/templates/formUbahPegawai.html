@@ -10,53 +10,53 @@
   		<h3 class="card-header">Ubah Data Pegawai</h3>
   		<div class="card-body">
 
-		<form action="#" th:object="${pegawai}"
+		<form th:action="@{/pegawai/ubah}" th:object="${pegawai}"
 		method="post">
 		<input hidden
 					value="1234" th:field="*{nip}">
-	
+					  <input type="hidden" id="id" name="id" th:field="*{id}">
 		<div class="form-group">
 			<label for="namaInput">Nama</label> <input type="text"
 				class="form-control" id="namaInput" aria-describedby="namaHelp"
 				placeholder="Masukkan Nama" th:field="*{nama}"> 
 		</div>
+		
 		<div class="form-row">
 			<div class="form-group col-md-6">
-				<label for="inputTL">Tempat Lahir</label> <input type="text"
-					class="form-control" placeholder="Masukkan Tempat Lahir"
-					id="inputTL" th:field="*{tempatLahir}">
+				<label for="inputTL">Tempat Lahir</label> <input type="text"class="form-control" placeholder="Masukkan Tempat Lahir"
+				id="inputTL" th:field="*{tempatLahir}">
 			</div>
 			<div class="form-group col-md-6">
-				<label for="inputBD">Tanggal Lahir</label> <input type="date"
-					class="form-control" id="inputBD" th:field="*{tanggalLahir}">
+				<label for="inputBD">Tanggal Lahir</label> <input type="date"class="form-control" id="inputBD" th:field="*{tanggalLahir}">
 			</div>
 		</div>
 
-	<div class="card bg-light mb-3" >
- 	<div class="card-header">Unit Kerja</div>
-  	<div class="card-body">
-		<div class="form-group">
-			<label for="pilihProvinsi">Provinsi</label> <select
-				class="form-control" id="pilihProvinsi">
-				<option value="" disabled selected>Pilih Provinsi</option>
-				<option th:each="provinsi: ${provinsi}"
-					th:text="${provinsi.getNama()}" th:value="${provinsi.getId()}"></option>
-			</select>
+		<div class="card bg-light mb-3" >
+ 		<div class="card-header">Unit Kerja</div>
+  		<div class="card-body">
+			<div class="form-group">
+				<label for="pilihProvinsi">Provinsi</label> <select
+					class="form-control" id="pilihProvinsi">
+					<option value="" disabled selected>Pilih Provinsi</option>
+					<option th:each="provinsi: ${provinsi}"
+						th:text="${provinsi.getNama()}" th:value="${provinsi.getId()}"></option>
+				</select>
+			</div>
+			
+			<div class="form-group">
+				<label for="pilihInstansi">Instansi</label> <select
+					class="form-control" id="pilihInstansi" name="instansi" th:field="*{instansi}" >
+					<option value="" disabled selected>Pilih Instansi</option>
+				</select>
+			</div>
+		
+			<div class="form-group">
+					<label for="namaInput">Tahun Masuk</label> <input type="text"class="form-control" id="namaInput" aria-describedby="namaHelp"
+					placeholder="Masukkan Tahun" th:field="*{tahunMasuk}"> 
+			</div>
 		</div>
-		<div class="form-group">
-
-			<label for="pilihInstansi">Instansi</label> <select
-				class="form-control" id="pilihInstansi" name="instansi" th:field="*{instansi}" >
-				<option value="" disabled selected>Pilih Instansi</option>
-			</select>
 		</div>
-		<div class="form-group">
-			<label for="namaInput">Tahun Masuk</label> <input type="text"
-				class="form-control" id="namaInput" aria-describedby="namaHelp"
-				placeholder="Masukkan Tahun" th:field="*{tahunMasuk}"> 
-		</div>
-	</div>
-	</div>
+		
 		<div class="card bg-light mb-3" >
   			<div class="card-header">Jabatan</div>
   				<div class="card-body">
@@ -68,32 +68,31 @@
 						<option th:each="jabatanItem: ${allJabatan}"
 							th:text="${jabatanItem.getNama()}" th:value="${jabatanItem.id}"></option>
 					</select>
-			<div class="input-group-addon">
-			<button class="btn btn-danger" th:value="${rowStat.index}" type="submit" name="deleteRow">deleteRow</button>
-			</div>
-		</div>
-		</div>
-		</div>
-			<div class="card-footer">
-	    		<button class="btn btn-secondary"  type="submit" name="addRow">Add Jabatan</button>
-	 		 </div>
+						<div class="input-group-addon">
+							<button class="btn btn-danger" th:value="${rowStat.index}" type="submit" name="hapusRow">deleteRow</button>
+						</div>
+				</div>
+				</div>
+				</div>
+						<div class="card-footer">
+				    		<button class="btn btn-secondary"  type="submit" name="tambahRow">Add Jabatan</button>
+				 		 </div>
 
-		
+							<button type="submit" name="submitUpdate" class="btn btn-primary">Submit</button>
 
-		  <button type="submit" name="pegawaiSubmit" class="btn btn-primary">Submit</button>
-
-	</form>
-
+		</form>
 </body>
-<script>
-$('#pilihProvinsi').on('change', function() {
-	$("#pilihInstansi").html("<option disabled selected>Pilih Instansi</option>");
-	$.getJSON( "/instansi/get?provinsi="+this.value, function( data ) {
-		$.each(data, function(i, value) {
-            $('#pilihInstansi').append($('<option>',{value:value.id,text:value.nama}));
-        });
+
+	<script>
+	
+	$('#pilihProvinsi').on('change', function() {
+		$("#pilihInstansi").html("<option disabled selected>Pilih Instansi</option>");
+		$.getJSON( "/instansi/get?provinsi="+this.value, function( data ) {
+			$.each(data, function(i, value) {
+	            $('#pilihInstansi').append($('<option>',{value:value.id,text:value.nama}));
+	        });
+		});
 	});
-});
-</script>
+	</script>
 
 </html>

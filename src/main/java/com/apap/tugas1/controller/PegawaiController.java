@@ -1,20 +1,31 @@
 package com.apap.tugas1.controller;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-
-import com.apap.tugas1.service.*;
-import com.apap.tugas1.service.PegawaiService;
-import com.apap.tugas1.model.*;
-
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.apap.tugas1.model.InstansiModel;
+import com.apap.tugas1.model.JabatanModel;
+import com.apap.tugas1.model.PegawaiModel;
+import com.apap.tugas1.service.InstansiService;
+import com.apap.tugas1.service.JabatanService;
+import com.apap.tugas1.service.PegawaiService;
+import com.apap.tugas1.service.ProvinsiService;
 
 @Controller
 public class PegawaiController {
@@ -156,13 +167,15 @@ public class PegawaiController {
 	 * Untuk mengatur form ubah pegawai 
 	 */
 	 @RequestMapping(value= "/instansi/get", method = RequestMethod.GET)
-		public @ResponseBody List<InstansiModel> getInstansi(@RequestParam("provinsi") long id, Model model) {
+		public @ResponseBody List<Map<String, String>> getInstansi(@RequestParam("provinsi") long id, Model model) {
 	    	List<InstansiModel> allInstansi = instansiService.findAllInstansi();
-	    	List<InstansiModel> instansiProvinsi = new ArrayList<InstansiModel>();
+	    	List<Map<String, String>> instansiProvinsi = new ArrayList<Map<String, String>>();
 	    	for (InstansiModel i: allInstansi) {
 	    		if (i.getProvinsi().getId()==id) {
-	    			instansiProvinsi.add(i);
-	    			System.out.println(i.getNama());
+	    			Map<String, String> map = new HashMap<String, String>();
+	    			map.put("nama", i.getNama());
+	    			map.put("id", String.valueOf(i.getId()));
+	    			instansiProvinsi.add(map);
 	    		}
 	    	}
 	    	System.out.println("ada objek sejumlah: "+instansiProvinsi.size());
@@ -206,7 +219,7 @@ public class PegawaiController {
 	/*
 	 * Untuk tambah atau kurangi row pada Jabatan
 	 */
-	@PostMapping(value = "/pegawai/ubah", params= {"addRow"})
+	@PostMapping(value = "/pegawai/ubah", params= {"tambahRow"})
 	public String tambahRowJabatan(@ModelAttribute PegawaiModel pegawai, BindingResult bindingResult, Model model) {
 		if (pegawai.getJabatanList()== null) {
 			pegawai.setJabatanList(new ArrayList<JabatanModel>());
@@ -220,10 +233,10 @@ public class PegawaiController {
 		
 		
 		
-		return "formTambahPegawai";
+		return "formUbahPegawai";
 	}
 	
-	@PostMapping(value="/pegawai/ubah" , params= {"deleteRow"})
+	@PostMapping(value="/pegawai/ubah" , params= {"hapusRow"})
 	public String hapusRowJabatan(@ModelAttribute PegawaiModel pegawai,BindingResult bindingResult, Model model, HttpServletRequest req) {
 		final Integer rowId = Integer.valueOf(req.getParameter("deleteRow"));
 	    pegawai.getJabatanList().remove(rowId.intValue());
@@ -234,7 +247,7 @@ public class PegawaiController {
 		model.addAttribute("provinsi", provinsiService.find_allProvinsi());
 		model.addAttribute("instansi",instansiService.findAllInstansi());
 		
-		return "formTambahPegawai";
+		return "formUbahPegawai";
 		
 	}
 	

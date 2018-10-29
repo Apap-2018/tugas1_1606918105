@@ -67,8 +67,10 @@ public class JabatanModel implements Serializable, Comparable<JabatanModel>{
     }
 
     public double getGajiPokok() {
+    	
         return gajiPokok;
     }
+   
 
     public void setGajiPokok(double gajiPokok) {
         this.gajiPokok = gajiPokok;
